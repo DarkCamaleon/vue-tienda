@@ -1,19 +1,25 @@
 <script>
+import axios from "axios";
+
 export default {
-    components: {},
     data() {
         return {
-            products: [
-                {
-                    id: "1",
-                    name: "mantequilla",
-                    price: "1000",
-                    uni_medida: "gr",
-
-                }
-            ],
-        }
-    }
+            products: [],
+        };
+    },
+    methods: {
+        async fetchProducts() {
+            try {
+                const response = await axios.get('http://www.deliciasmariella.com/productos/show_products.php');
+                this.products = response.data.datos_tabla;
+            } catch (error) {
+                console.error("Error al obtener los productos:", error);
+            }
+        },
+    },
+    mounted() {
+        this.fetchProducts();
+    },
 }
 </script>
 
@@ -21,9 +27,6 @@ export default {
     <div class="header-view">
         <h2 class="title-view">Productos</h2>
         <span class="info-title">Tablas - Productos</span>
-    </div>
-    <div class="d-flex justify-content-center">
-        <!-- <ToolbarComponent></ToolbarComponent> -->
     </div>
     <div class="container-view">
         <div class="row">
@@ -37,17 +40,16 @@ export default {
                     </thead>
                     <tbody>
                         <tr v-for="(product, i) in products" :key="i">
-                            <th>{{ product.id }}</th>
-                            <th>{{ product.name }}</th>
-                            <th>{{ product.price }}</th>
-                            <th>{{ product.uni_medida }}</th>
+                            <th>{{ product.ID_PRODUCTO || "-" }}</th>
+                            <th>{{ product.NOMBRE || "-" }}</th>
+                            <th>{{ product.PRECIO || "-" }}</th>
+                            <th>{{ product.UNI_MEDIDA || "-" }}</th>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-
 </template>
 
 <style>
